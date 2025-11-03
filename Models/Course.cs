@@ -16,4 +16,6 @@ public class Course
     public DateTime? DateEdited { get; set; }
     public ApplicationUser? Owner { get; set; }
 
+
+    public ICollection<Enrollment> Enrollments { get; set; }
 }
