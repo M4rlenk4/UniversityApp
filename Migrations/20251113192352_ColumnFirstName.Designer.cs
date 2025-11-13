@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using University.Data;
 
@@ -11,9 +12,11 @@ using University.Data;
 namespace University.Migrations
 {
     [DbContext(typeof(SchoolContext))]
-    partial class SchoolContextModelSnapshot : ModelSnapshot
+    [Migration("20251113192352_ColumnFirstName")]
+    partial class ColumnFirstName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,68 +250,18 @@ namespace University.Migrations
                     b.Property<DateTime?>("DateEdited")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DepartmentID")
-                        .HasColumnType("int");
-
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CourseID");
-
-                    b.HasIndex("DepartmentID");
 
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Course", (string)null);
-                });
-
-            modelBuilder.Entity("University.Models.CourseAssignment", b =>
-                {
-                    b.Property<int>("CourseID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InstructorID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CourseID", "InstructorID");
-
-                    b.HasIndex("InstructorID");
-
-                    b.ToTable("CourseAssignment", (string)null);
-                });
-
-            modelBuilder.Entity("University.Models.Department", b =>
-                {
-                    b.Property<int>("DepartmentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentID"));
-
-                    b.Property<decimal>("Budget")
-                        .HasColumnType("money");
-
-                    b.Property<int?>("InstructorID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("DepartmentID");
-
-                    b.HasIndex("InstructorID");
-
-                    b.ToTable("Department", (string)null);
                 });
 
             modelBuilder.Entity("University.Models.Enrollment", b =>
@@ -335,48 +288,6 @@ namespace University.Migrations
                     b.HasIndex("StudentID");
 
                     b.ToTable("Enrollment", (string)null);
-                });
-
-            modelBuilder.Entity("University.Models.Instructor", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("FirstMidName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasColumnName("FirstName");
-
-                    b.Property<DateTime>("HireDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Instructor", (string)null);
-                });
-
-            modelBuilder.Entity("University.Models.OfficeAssignment", b =>
-                {
-                    b.Property<int>("InstructorID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("InstructorID");
-
-                    b.ToTable("OfficeAssignment", (string)null);
                 });
 
             modelBuilder.Entity("University.Models.Student", b =>
@@ -459,47 +370,11 @@ namespace University.Migrations
 
             modelBuilder.Entity("University.Models.Course", b =>
                 {
-                    b.HasOne("University.Models.Department", "Department")
-                        .WithMany("Courses")
-                        .HasForeignKey("DepartmentID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("University.Models.ApplicationUser", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId");
 
-                    b.Navigation("Department");
-
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("University.Models.CourseAssignment", b =>
-                {
-                    b.HasOne("University.Models.Course", "Course")
-                        .WithMany("CourseAssignments")
-                        .HasForeignKey("CourseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("University.Models.Instructor", "Instructor")
-                        .WithMany("CourseAssignments")
-                        .HasForeignKey("InstructorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Course");
-
-                    b.Navigation("Instructor");
-                });
-
-            modelBuilder.Entity("University.Models.Department", b =>
-                {
-                    b.HasOne("University.Models.Instructor", "Administrator")
-                        .WithMany()
-                        .HasForeignKey("InstructorID");
-
-                    b.Navigation("Administrator");
                 });
 
             modelBuilder.Entity("University.Models.Enrollment", b =>
@@ -521,35 +396,9 @@ namespace University.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("University.Models.OfficeAssignment", b =>
-                {
-                    b.HasOne("University.Models.Instructor", "Instructor")
-                        .WithOne("OfficeAssignment")
-                        .HasForeignKey("University.Models.OfficeAssignment", "InstructorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Instructor");
-                });
-
             modelBuilder.Entity("University.Models.Course", b =>
                 {
-                    b.Navigation("CourseAssignments");
-
                     b.Navigation("Enrollments");
-                });
-
-            modelBuilder.Entity("University.Models.Department", b =>
-                {
-                    b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("University.Models.Instructor", b =>
-                {
-                    b.Navigation("CourseAssignments");
-
-                    b.Navigation("OfficeAssignment")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("University.Models.Student", b =>
