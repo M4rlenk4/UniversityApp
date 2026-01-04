@@ -13,7 +13,7 @@ options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false).AddRoles<IdentityRole>().AddEntityFrameworkStores<SchoolContext>();
 builder.Services.AddControllersWithViews();
-
+ 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
