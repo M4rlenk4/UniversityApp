@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using University.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("SchoolContext");
+var connectionString = builder.Configuration.GetConnectionString("AzureContext");
 
 // Add services to the container.
 builder.Services.AddDbContext<SchoolContext>(options =>
@@ -16,8 +16,6 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-//nekj od gpt k je reku da tudi to loh dam namesto kode spodj ki bi moral
-// nekam jo vključiti sam sem za foro najprej od gpt probu in dela 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -32,8 +30,6 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while initializing the database.");
     }
 }
-
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
